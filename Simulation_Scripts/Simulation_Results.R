@@ -47,8 +47,8 @@ ALPHA_P    <- 0.05
   unique(idx_keep)
 }
 
-.true_val <- function(item, dif_items, dif_size = DIF_SIZE) {
-  if (item %in% dif_items) dif_size else 0.0
+.true_val <- function(item, dif_items, family, dif_size = DIF_SIZE) {
+  if (identical(family, "latX") && item %in% dif_items) dif_size else 0.0
 }
 
 # core results extraction 
@@ -84,8 +84,8 @@ make_est_rows <- function(node, family, prior_id, meta, dif_items) {
     ChiSq    = if ("ChiSq"  %in% names(df_sub))  df_sub$ChiSq  else NA_real_,
     PValue   = suppressWarnings(as.numeric(df_sub$PValue)),
     
-    truth        = vapply(items, \(it) .true_val(it, dif_items), numeric(1)),
-    is_dif_scen  = items %in% dif_items
+    truth       = vapply(items, \(it) .true_val(it, dif_items, family), numeric(1)),
+    is_dif_scen = if (identical(family, "latX")) items %in% dif_items else FALSE
   )
 }
 
@@ -163,6 +163,3 @@ perf_min <- est_long %>%
     .groups = "drop"
   ) %>%
   arrange(N, dif_case, model_family, prior_id, item, estimator)
-
-
-
