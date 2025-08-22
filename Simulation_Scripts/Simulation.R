@@ -1,21 +1,24 @@
 # ==========================================================
-# Minimal Monte Carlo (in-memory, simplified null storage)
+# Monte Carlo (in-memory, simplified null storage)
 # - Each replication is a list element
 # - Full models keep: estimates_raw, wald_raw, modelfit_text, (optional) fit
-# - Null models keep: estimates_raw, modelfit_text, (optional) fit  [no wald_raw, no "shared"]
+# - Null models keep: estimates_raw, modelfit_text, (optional) fit  [no wald_raw]
 # ==========================================================
 suppressPackageStartupMessages({
   library(rblimp)
 })
 
+# ptional/global seed (not required since we seed per replication)
 set.seed(12345)
 
 # -------- CONFIG --------
 priors_to_run <- c("tight","baseline","loose")
 Ns    <- c(200, 500, 800)
-DIF_sets <- list(`2DIF` = c("y2","y3"),
-                 `AllDIF` = c("y2","y3","y4","y5"))
-Y_SD <- 0.65   
+DIF_sets <- list(
+  `2DIF`   = c("y2","y3"),
+  `AllDIF` = c("y2","y3","y4","y5")
+)
+Y_SD   <- 0.65     # <- FIXED SD for all y's
 n_reps <- 100
 
 burn <- 25000
@@ -25,41 +28,30 @@ OUTPUT_SPEC <- "mean median stddev mad_sd quant95 psr n_eff mcmc_se wald pvalue"
 # Store full fit objects? (large; FALSE is safer)
 keep_fit_objects <- FALSE
 
-# -------- data generator --------
+# -------- data generator (fixed y_sd; no randomization) --------
 gen_data <- function(N,
                      dif_items = c("y2","y3","y4","y5"),
                      p_group = 0.5, mu_shift = 0.5, sd_age = 1.0,
                      base_loading = 1.00, gamma = 0.30,
-                     y_sd = 0.65,                    # <- scalar or length-5 vector
-                     y_sd_range = c(0.50, 0.80)) {   # <- proper min,max default
+                     y_sd = 0.65) {  # <- single scalar SD used for all y's
+  stopifnot(length(y_sd) == 1L)
+  
   Group <- rbinom(N, 1, p_group)
   X     <- rnorm(N, mean = mu_shift * Group, sd = sd_age)
   Lat   <- rnorm(N, 0, 1)
-  make_x <- function() 1.00*X + rnorm(N, 0, 0.55)
+  
+  make_x <- function() X + rnorm(N, 0, 0.55)
   x1 <- make_x(); x2 <- make_x(); x3 <- make_x(); x4 <- make_x(); x5 <- make_x()
   
-  # ----- FIXED: handle y_sd correctly -----
-  if (!is.null(y_sd)) {
-    if (length(y_sd) == 1L) {
-      sds <- rep(y_sd, 5)
-    } else if (length(y_sd) == 5L) {
-      sds <- y_sd
-    } else {
-      stop("y_sd must be NULL, a scalar, or a length-5 vector.")
-    }
-  } else {
-    sds <- runif(5, y_sd_range[1], y_sd_range[2])
-  }
-  
-  make_y <- function(name, sd_i) {
+  make_y <- function(name) {
     eff <- if (name %in% dif_items) (base_loading + gamma*X) else base_loading
-    eff*Lat + rnorm(N, 0, sd_i)
+    eff * Lat + rnorm(N, 0, y_sd)   # <- fixed SD
   }
-  y1 <- make_y("y1", sds[1]); y2 <- make_y("y2", sds[2]); y3 <- make_y("y3", sds[3])
-  y4 <- make_y("y4", sds[4]); y5 <- make_y("y5", sds[5])
+  y1 <- make_y("y1"); y2 <- make_y("y2"); y3 <- make_y("y3")
+  y4 <- make_y("y4"); y5 <- make_y("y5")
+  
   data.frame(Group, x1,x2,x3,x4,x5, y1,y2,y3,y4,y5, check.names = FALSE)
 }
-
 
 # -------- models --------
 model_latX_labeled <- "
@@ -76,6 +68,7 @@ item.model:
   y4 ~ 1 lat      latX     latX*lat@b_int_y4;
   y5 ~ 1 lat      latX     latX*lat@b_int_y5;
 "
+
 model_group_labeled <- "
 latent.model:
   lat ~ 1@0;
@@ -87,6 +80,7 @@ item.model:
   y4 ~ 1 Group lat     Group*lat@b_gint_y4;
   y5 ~ 1 Group lat     Group*lat@b_gint_y5;
 "
+
 # Nulls
 model_latX_null <- "
 latent.model:
@@ -101,6 +95,7 @@ item.model:
   y4 ~ 1 lat    latX@0 latX*lat@0;
   y5 ~ 1 lat    latX@0 latX*lat@0;
 "
+
 model_grp_null <- "
 latent.model:
   lat ~ 1@0;
@@ -174,7 +169,7 @@ fit_one_rep <- function(N, dif_items, r,
                         priors_to_run, burn, iter,
                         keep_fit_objects = FALSE) {
   set.seed(data_seed(N, dif_items, r))
-  dat <- gen_data(N = N, dif_items = dif_items, y_sd = Y_SD)  # <- pass fixed SD
+  dat <- gen_data(N = N, dif_items = dif_items, y_sd = Y_SD)  # <- fixed SD
   
   # FULL fits: Latent-X
   lat_fulls <- lapply(priors_to_run, function(pr) {
