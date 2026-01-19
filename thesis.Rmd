@@ -64,7 +64,7 @@ library(blavaan)
 
 {\large
 Felipe Fontana Vieira\\[0.2cm]
-{\small Student ID: }
+{\small Student ID: 02311732}
 }
 
 \vspace{1cm}
@@ -122,39 +122,38 @@ Felipe Fontana Vieira
 
 # Abstract {-}
 
-[...]
+Measurement invariance (MI) is typically framed as a psychometric prerequisite for valid group comparisons in psychological research. However, this view treats MI as a statistical property rather than a substantive research question, and leaves researchers unaware of its implicit causal assumptions. Recent literature has integrated causal inference perspectives into MI research. In this thesis, we extend this work by examining the causal implications of MI testing from both conceptual and methodological perspectives. We clarify the causal interpretation of MI by integrating different theoretical developments. We also propose the use of a Bayesian moderated nonlinear factor analysis (MNLFA) approach for investigating MI violations under the specific extension. Last, we demonstrate with a real-world application how conclusions may differ substantially when MI is approached through a causal angle rather than treated purely as a statistical requirement.
 
 # Introduction
 
-In psychological research, questionnaires are widely used to measure latent variables^[@bollen_hoyle_2012 provide an extensive overview of conceptual definitions in the literature. The distinction between manifest and latent variables adopted here follows the epistemic interpretation of @borsboom_2008: a variable is treated as observed when the inference from data structure to variable structure can be made with certainty, and as latent when this inference is prone to error.] (i.e., unobserved constructs such as personality, emotion, and morality) through multiple observed indicators. Because such constructs cannot be directly observed, their assessment requires formal models that relate observed responses to the underlying psychological attributes they represent. A widely used statistical framework for this purpose is structural equation modeling (SEM) with latent variables, which allows researchers to explicitly separate true construct variance from measurement error, provided that the specified model and its assumptions hold [@kline_2012]. In this case, SEMs consist of two components: the measurement model, describing how latent variables give rise to their observed indicators (typically tested via confirmatory factor analysis; CFA), and the structural model, describing relationships (i.e., regression functions) among the latent variables themselves [@bollen_1989]. Note that, within the measurement model, the latent variable is assumed to be the common cause of the observed indicators, despite some researchers describing this as a statistical model only. Thus, assuming that the latent factor model correctly depicts the true model underlying the items is in itself a causal commitment^[Researchers empirical test for the adequacy of factor models through model fit indices and hypothesis testing, but this does not mean we "confirm" such structure.]. In fact, such models were introduced as causal models [@rohrer_paulewicz_2025].
+In psychological research, questionnaires are widely used to measure latent variables^[@bollen_hoyle_2012 provide an extensive overview of conceptual definitions in the literature. The distinction between manifest and latent variables adopted here follows the epistemic interpretation of @borsboom_2008: a variable is treated as observed when the inference from data structure to variable structure can be made with certainty, and as latent when this inference is prone to error.] (i.e., unobserved constructs such as personality, emotion, and morality) through multiple observed indicators. Because these constructs are not directly observable, researchers need formal models to link observed responses to the psychological attributes they represent. Structural equation modeling (SEM) with latent variables is a widely used statistical framework for this purpose. SEM allows researchers to separate true construct variance from measurement error, assuming the model specification and its assumptions are valid [@kline_2012]. In this case, SEMs consist of two components: the measurement model, describing how latent variables give rise to their observed indicators (typically tested via confirmatory factor analysis; CFA), and the structural model, describing relationships (i.e., regression functions) among the latent variables themselves [@bollen_1989]. Note that, within the measurement model, the latent variable is assumed to be the common cause of the observed indicators, despite some researchers describing this as a statistical model only. Thus, assuming that the latent factor model correctly depicts the true model underlying the items is in itself a causal commitment^[Researchers empirical test for the adequacy of factor models through model fit indices and hypothesis testing, but this does not mean we "confirm" such structure.]. In fact, such models were introduced as causal models [@rohrer_paulewicz_2025].
 
-With the increasing access to cross-cultural investigations, researchers may be particularly interested in comparing these latent constructs between different populations. For instance, @boiger_etall_2018 investigated different types of emotional experiences across the United States, Japan, and Belgium. @meuleman_etall_2025 analyzed the structure of Group-Focused Enmity among majority and ethnic minority populations in Belgium. @bago_etall_2022 analyzed differences in moral judgment from 45 different countries. A critical requirement for comparing latent variables across groups is *measurement invariance* (MI) or factorial invariance—the measurement model parameters function equivalently across groups [@millsap_olivera-aguilar_2012]. This entails, for example, that "two persons with the same true score on a latent construct have the same expected item response on a measurement instrument" (Sterner et al., 2025, p. 3). Without MI, observed differences in questionnaire responses might reflect differences in how groups interpret or respond to items rather than true psychological differences in the underlying construct [@meuleman_etall_2023]. Researchers typically test MI through the comparison of progressively restrictive (nested) statistical models (i.e., multi-group confirmatory factor analysis; MG-CFA). However, when using MG-CFA to detect MI, researchers implicitly assume that any possible measurement difference arises from direct effects of group membership (e.g., country) on the measurement parameters. This traditional approach thus treats MI purely as a statistical property without considering that measurement differences may arise through indirect causal pathways. In other words, a methodological hurdle to overcome before meaningful comparisons can be made. 
+Cross-cultural research has made it increasingly feasible to compare latent constructs across populations. Researchers have investigated emotional experiences across the United States, Japan, and Belgium [@boiger_etall_2018], the structure of Group-Focused Enmity among majority and minority populations in Belgium [@meuleman_etall_2025], and differences in moral judgment across 45 countries [@bago_etall_2022]. A critical requirement for comparing latent variables across groups is *measurement invariance* (MI) or factorial invariance (i.e., the measurement model parameters function equivalently across groups) [@millsap_olivera-aguilar_2012]. This entails, for example, that "two persons with the same true score on a latent construct have the same expected item response on a measurement instrument" (Sterner et al., 2025, p. 3). Hence, without MI, observed differences in questionnaire responses might reflect differences in how groups interpret or respond to items rather than true psychological differences in the underlying construct [@meuleman_etall_2023]. Researchers typically test MI by comparing progressively restrictive (nested) statistical models (i.e., multi-group confirmatory factor analysis; MG-CFA). The implicit assumption when using MG-CFA to detect MI is that any possible measurement differences arise from direct effects of group membership (e.g., country) on the measurement parameters. This traditional approach thus treats MI purely as a statistical property without considering that measurement differences may arise through indirect causal pathways. In other words, it is basically a methodological hurdle to overcome before meaningful comparisons can be made. 
 
-Recently, @sterner_etall_2024 applied directed acyclic graphs (DAGs) to MI testing, building on a DAG-based framework for cross-cultural research proposed by @deffner_etall_2022. The authors clarify the aforementioned implicit causal assumption when using MG-CFA to test MI. Using simulated data, they also demonstrated that MG-CFA detects MI violations regardless of whether group membership affects measurement parameters directly or indirectly. That is, the test correctly rejects MI even when the causal structure differs from what MG-CFA implicitly assumes. However, it provides limited information about *why* MI fails. Understanding the underlying mechanisms is crucial because different causal structures call for different solutions and may themselves constitute interesting research questions. Importantly, while DAGs offer a principled way to reason about these different causal structures, they do not prescribe a specific statistical model for estimation. To bridge this, @sterner_etall_2024 also proposed moderated nonlinear factor analysis (MNLFA) as a modeling framework capable of explicitly representing and estimating different causal pathways when testing for MI^[MG-CFA can be viewed as a restricted special case of MNLFA. Indeed, MNLFA generalizes the approach by allowing both discrete and continuous covariates to moderate measurement parameters and by facilitating the explicit modeling of indirect (e.g., mediated) effects. This will be further clarified.].
+Recently, @sterner_etall_2024 applied directed acyclic graphs (DAGs) to MI testing, building on a DAG-based framework for cross-cultural research proposed by @deffner_etall_2022. The authors clarify the implicit causal assumption underlying MG-CFA when testing MI. Moreover, using simulated data, they also demonstrated that MG-CFA detects MI violations regardless of whether group membership affects measurement parameters directly or indirectly. That is, the test correctly rejects MI even when the causal structure differs from what MG-CFA implicitly assumes. However, it provides limited information about *why* MI fails. This is important because understanding the underlying mechanisms is crucial, as different causal structures call for different solutions and may themselves constitute interesting research questions. Importantly, while DAGs offer a principled way to reason about these different causal structures, they do not prescribe a specific statistical model for estimation. To bridge this, @sterner_etall_2024 proposed moderated nonlinear factor analysis (MNLFA) as a modeling framework capable of explicitly representing and estimating different causal pathways when testing for MI^[MG-CFA can be viewed as a restricted special case of MNLFA. Indeed, MNLFA generalizes the approach by allowing both discrete and continuous covariates to moderate measurement parameters and by facilitating the explicit modeling of indirect (e.g., mediated) effects. This will be further clarified.].
 
 ## Present Research
 
 This thesis extends the work of @sterner_etall_2024 in three directions. First, we elaborate on the conceptual discussion about causal inference and MI. Second, we test whether their findings generalize across conditions. The authors demonstrated that the traditional approach to testing MI using MG-CFA was able to detect a violation of MI in a single large generated dataset ($N = 1000$), even though the data-generating process included an indirect effect of a grouping variable on the measurement model via a mediator. However, it remains unclear whether this finding holds with smaller sample sizes typical in psychological research (e.g., $N = 200$) or when fewer indicators are affected by non-invariance. 
+Third, we specify a *latent* variable as the source of violating MI, rather than an observed mediator. Many sources of heterogeneity in psychological research are inherently unobservable, making this extension substantively important. To our knowledge, this is the first application of this modeling strategy to latent causes of measurement non-invariance. We therefore conduct a systematic Monte Carlo simulation study to investigate the consequences of assuming specific causal mechanisms when testing for MI with MNLFA under the varying sample sizes and numbers of non-invariant items. We compare: (a) the traditional approach that mimics MG-CFA by including only direct group effects on measurement parameters^[Ideally, to closely replicate @sterner_etall_2024, we would use MG-CFA. However, MG-CFA cannot accommodate a latent source of non-invariance, as latent variables cannot serve as grouping variables. In fact, a frequentist MNLFA faces the same limitation, but a Bayesian MNLFA implementation can accommodate this.], ignoring potential mediators, versus (b) a causal approach that models the complete data-generating mechanism including the latent mediating variable. This comparison addresses a fundamental question in MI testing: researchers may argue that causal pathways are irrelevant, thus they simply need to know whether latent variables can be compared across groups, which is the case when MI holds. From this perspective, if one can detect a violation of MI (as @sterner_etall_2024 did with MG-CFA), this suffices to inform decisions about group comparisons.
 
-Third, we specify a *latent* variable as the source of violating MI, rather than an observed mediator. Many sources of heterogeneity in psychological research are inherently unobservable, making this extension substantively important. To our knowledge, this is the first application of this modeling strategy to latent causes of measurement non-invariance. We therefore conduct a systematic Monte Carlo simulation study to investigate the consequences of assuming specific causal mechanisms when testing for MI with MNLFA under the varying sample sizes and numbers of non-invariant items. We compare: (a) the traditional approach that mimics MG-CFA by including only direct group effects on measurement parameters^[Ideally, to closely replicate @sterner_etall_2024, we would use MG-CFA. However, MG-CFA cannot accommodate a latent source of non-invariance, as latent variables cannot serve as grouping variables. In fact, a frequentist MNLFA faces the same limitation, but a Bayesian MNLFA implementation can accommodate this. We therefore use a Bayesian MNLFA.], ignoring potential mediators, versus (b) a causal approach that models the complete data-generating mechanism including the latent mediating variable. This comparison addresses a fundamental question in MI testing: researchers may argue that causal pathways are irrelevant, thus they simply need to know whether latent variables can be compared across groups, which is the case when MI holds. From this perspective, if one can detect a violation of MI (as @sterner_etall_2024 did with MG-CFA), this suffices to inform decisions about group comparisons.
-
-This rest of this thesis is organized as follows. In chapter 2, we introduce the general literature and further elaborate on all the points introduced thus far. In chapter 4, we describe the simulation study performed. In chapter 5, we present the results from this simulation study. In chapter 6, we provided a real-world illustration. In chapter 7, a discussion is elaborated. Note that this thesis was written in such a way that the different statistical models and causal discussion are accessible to the reader, assuming certain basic knowledge of the concepts presented. For formal definitions, we always refer the reader to the Appendix.
+This rest of this thesis is organized as follows. In chapter 2, we introduce the general literature and further elaborate on all the points introduced thus far. In chapter 3, we describe the simulation study performed. In chapter 4, we present the results from this simulation study. In chapter 5, we provided a real-world illustration. In chapter 6, a discussion is elaborated. Note that this thesis was written in such a way that the different statistical models and causal discussion are accessible to the reader, assuming certain basic knowledge of the concepts presented. For formal definitions, we always refer the reader to the Appendix.
 
 \newpage{}
 
 # DAGs, SEMs, and MI: A More Than Casual Relationship  
 
-This section provides the background necessary to understand how the conceptual framework presented here connects to the statistical models used throughout this work. Readers familiar with causal inference may recognize that the treatment of SEMs with latent variables is intentionally simplified, focusing on how they link to causal graphical models and to the logic of MI testing. In fact, the introduction of causal inference is in itself also simplified^[For instance, we focus on causal DAGs without necessarily mentioning the mathematical connections between Pearl's framework and Rubin's causal model. We also do not further extend on Woodward's interventionist framework, which is relevant for psychological causes [@eronen_2020].].
+In this section we provide the basic information required to understand how the conceptual framework connects to the statistical models used throughout this thesis. Readers familiar with causal inference may recognize that the treatment of SEMs with latent variables is simplified. We focus solely on how they link to causal DAGs and to the logic of MI testing. In fact, the introduction of causal inference is in itself also simplified^[For instance, we focus on causal DAGs without necessarily mentioning the mathematical connections between Pearl's framework and Rubin's causal model. We also do not further extend on Woodward's interventionist framework, which is relevant for psychological causes [@eronen_2020].].
 
 ## DAGs and SEMs
 
-In causal inference, DAGs encode qualitative assumptions about the data-generating process. Nodes represent variables, directed edges represent direct causal effects, and conditional independence relations among variables are implied by the absence and orientation of edges according to the rules of d-separation [@hernan_robins_2020; @pearl_2009]. Importantly, DAGs describe a causal structure without committing to a specific statistical model: they do not, for example, specify functional forms or parametric relationships. Understanding how information flows through a DAG requires recognizing three canonical patterns that form the building blocks of more complex structures. A chain (or mediator) occurs when $A \rightarrow B \rightarrow C$, where $B$ transmits the causal effect of $A$ on $C$. A fork (or common cause) occurs when $A \leftarrow B \rightarrow C$, where $B$ induces a spurious association between $A$ and $C$. A collider is present when $A \rightarrow B \leftarrow C$, where $B$ is influenced by both $A$ and $C$ (see Definition 6.1 in Appendix 1).
+In causal inference, DAGs encode qualitative assumptions about the data-generating process. Nodes represent variables, directed edges represent direct causal effects, and conditional independence relations among variables are implied by the absence and orientation of edges according to the rules of d-separation [@hernan_robins_2020; @pearl_2009]. One relevant aspect of DAGs describe is that they describe a causal structure without committing to a specific statistical model and associated restrictions (i.e., functional form or parametric relationship). Understanding how information flows through a DAG requires recognizing three crucial patterns that form the building blocks of more complex structures. Specifically, we have a chain (or mediator) when $A \rightarrow B \rightarrow C$, where $B$ transmits the causal effect of $A$ on $C$. A fork (or common cause) happens when $A \leftarrow B \rightarrow C$, where $B$ induces a spurious association between $A$ and $C$. Last, a collider is present when $A \rightarrow B \leftarrow C$, where $B$ is influenced by both $A$ and $C$ (see Definition 6.1 in Appendix 1).
 
-These configurations differ in how conditioning on variables affects associations. In chains and forks, conditioning on $B$ blocks the association between $A$ and $C$. In contrast, in colliders, conditioning on $B$ or any of its descendants opens a path and induces an association between $A$ and $C$ [@wasserman_2004; @sterner_etall_2024; @hernan_robins_2020] (see Definition 6.2 in Appendix 1). DAGs are therefore valuable tools for identifying which variables should be conditioned on to estimate causal effects. The integration of these principles with domain knowledge regarding the underlying causal structure provides the foundation for valid causal inference, even from observational data [@rohrer_2018].
+These configurations differ in how conditioning on variables affects associations. In chains and forks, conditioning on $B$ blocks the association between $A$ and $C$. In contrast, in colliders, conditioning on $B$ or any of its descendants opens a path and induces an association between $A$ and $C$ [@wasserman_2004; @sterner_etall_2024; @hernan_robins_2020] (see Definition 6.2 in Appendix 1). Therefore, DAGs are valuable tools for identifying which variables should be conditioned on to estimate causal effects. The integration of these principles with domain knowledge regarding the underlying causal structure provides the opportunity for "valid" causal inference, even from observational data [@rohrer_2018].
 
-@pearl_2009 introduced structural causal models (SCMs) as a way to formalize this qualitative representation. Each variable gets its own autonomous structural equation (see Definition 6.4 in Appendix 1). A DAG visualizes the structure of an SCM, while the equations define how variables are generated and how interventions (i.e., do-operator) replace specific equations while leaving the rest unchanged. Pearl explicitly notes the conceptual connection between SCMs and the SEM tradition, although his formulation allows arbitrary, potentially nonlinear functions, unlike the parametric linear systems typical of classical SEMs (see p.27 in Pearl, 2009)^[Note, however, that nonlinear SEM's were already present in the literature (Lee, 2007).]. Indeed, the term SEM usually refers to parametric systems used to reproduce observed covariance structures. These models often impose linearity and Gaussian errors [@bollen_1989; @matsueda_2023] (see 6.2.2 in Appendix 1). When given causal interpretation, such SEMs can be seen as special cases of Pearl’s SCMs. Yet, as noted by @pearl_2012, identical covariance structures may arise from different causal processes, meaning that SEMs are informative about causal relations only when their equations correspond to autonomous mechanisms rather than merely descriptive associations.
+@pearl_2009 introduced structural causal models (SCMs) as a way to formalize this qualitative representation. Each variable gets its own autonomous structural equation (see Definition 6.4 in Appendix 1). A DAG visualizes the structure of an SCM, while the equations define how variables are generated and how interventions (i.e., do-operator) replace specific equations while leaving the rest unchanged. Moreover, Pearl explicitly notes the conceptual connection between SCMs and the SEM tradition, although his formulation allows arbitrary, potentially nonlinear functions, unlike the parametric linear systems typical of classical SEMs (see p.27 in Pearl, 2009)^[Note, however, that nonlinear SEM's were already present in the literature (Lee, 2007).]. Indeed, the term SEM usually refers to the parametric model used to reproduce observed covariance structures, where linearity and Gaussian errors are imposed [@bollen_1989; @matsueda_2023] (see 6.2.2 in Appendix 1). When given causal interpretation, such SEMs can be seen as special cases of Pearl’s SCMs. Yet, as noted by @pearl_2012, identical covariance structures may arise from different causal processes. This means that SEMs are informative about causal relations only when their equations correspond to autonomous mechanisms.
 
-A relevant feature of SEMs, especially in psychometrics, is their capacity to incorporate latent variables [@bollen_1989], which is the focus of this thesis. This is crucial because many constructs of interest cannot be directly observed but are instead inferred from multiple error-prone indicators. Under standard measurement assumptions, SEMs with latent variables thus formalize how observed responses relate to unobserved constructs, enabling researchers to separate measurement error from structural relations between constructs. However, it is crucial to mention that exactly this combination further complicates causal interpretation and the role of intervention. Ongoing research addresses these issues [@borsboom_etall_2003; @rhemtulla_etall_2017; @rhemtulla_etall_2020; @vanderweele_2022; @eronen_2020], but a detailed exploration is beyond the scope of this current thesis. 
+A relevant feature of SEMs, especially in psychometrics, is their capacity to incorporate latent variables [@bollen_1989], which is the focus of this thesis. This is important because many constructs of interest cannot be directly observed. Instead, they are inferred from multiple error-prone indicators. Therefore, under standard measurement assumptions, SEMs with latent variables formalize how observed responses relate to unobserved constructs. On top of that, researchers also separate measurement error from structural relations between constructs. However, it is crucial to mention that exactly this combination further complicates causal interpretation and the role of intervention. Ongoing research addresses these issues [@borsboom_etall_2003; @rhemtulla_etall_2017; @rhemtulla_etall_2020; @vanderweele_2022; @eronen_2020], but a detailed exploration is beyond the scope of this current thesis. 
 
 ## SEMs With Latent Variables  
 
@@ -174,11 +173,11 @@ Let $\boldsymbol{\eta} \in \mathbb{R}^m$ denote a vector of $m$ latent variables
 \boldsymbol{\epsilon} \sim \mathcal{N}(\mathbf{0}, \boldsymbol{\Theta}).
 \]
 
-where $\boldsymbol{\nu} \in \mathbb{R}^p$ is a vector of intercepts, $\boldsymbol{\Lambda} \in \mathbb{R}^{p \times m}$ is a matrix of factor loadings, and $\boldsymbol{\Theta}$ is a $p \times p$ covariance matrix of measurement residuals [@rosseel_loh_2024]. A common assumption is that residuals are conditionally independent given the latent variables, such that $\mathrm{Cov}(\epsilon_j, \epsilon_k \mid \boldsymbol{\eta}) = 0$ for $j \neq k$. In practice, this assumption may be relaxed when theoretical or empirical considerations justify estimating specific residual covariances (see Appendix 2 for details).
+where $\boldsymbol{\nu} \in \mathbb{R}^p$ is a vector of intercepts, $\boldsymbol{\Lambda} \in \mathbb{R}^{p \times m}$ is a matrix of factor loadings, and $\boldsymbol{\Theta}$ is a $p \times p$ covariance matrix of measurement residuals [@rosseel_loh_2024]. A common assumption is that residuals are conditionally independent given the latent variables, such that $\mathrm{Cov}(\epsilon_j, \epsilon_k \mid \boldsymbol{\eta}) = 0$ for $j \neq k$. This assumption may be relaxed when theoretical or empirical considerations justify it (see Appendix 2 for details).
 
-Arguably, the measurement model may be viewed as a nuisance. In the hypothetical case of error-free measurement, the measurement model would be unnecessary, and the construct could be treated as directly observed. Consequently, the primary object of inference is the relationship among latent variables, with the measurement model serving as an auxiliary part that enables the estimation of those relationships. 
+Arguably, the measurement model may be viewed as a nuisance. In the hypothetical case of error-free measurement, the measurement model would be unnecessary, and the construct could be treated as directly observed. The primary object of inference is usually the relationship among latent variables, with the measurement model serving as an auxiliary part that enables the estimation of those relationships. 
 
-In this case, the model is completed by specifying relations among the same $m$ latent variables $\boldsymbol{\eta}$. The structural component is defined as
+In this case, the structural model specifies the relations among the $m$ latent variables $\boldsymbol{\eta}$:
 
 \[
 \boldsymbol{\eta} = \boldsymbol{\alpha} + \mathbf{B}\boldsymbol{\eta} + \boldsymbol{\zeta},
@@ -190,7 +189,7 @@ where $\boldsymbol{\alpha} \in \mathbb{R}^m$ is a vector of latent intercepts, $
 
 Having specified the measurement and structural components of the model^[The normality assumption on $\boldsymbol{\epsilon}$ and $\boldsymbol{\zeta}$ is mainly for likelihood-based estimation under classical maximum likelihood. It defines the joint distribution of observed variables and justify the usual standard errors, test statistics, and fit measures. So, it is not needed to define the linear structural relations themselves. Bayesian SEM treats normality as part of the likelihood conditional on parameters, but posterior inference also depends on priors and does not lean on the same asymptotic results (Bollen, 1989; Lee, 2007).], we briefly clarify how the parameters of the measurement model may be interpreted from a purely statistical perspective. Although, as mentioned, parameters in the measurement model are often given a causal interpretation (i.e., latent variables are viewed as giving rise to their indicators) this causal reading is not required for the statistical interpretation of the model parameters. This distinction is relevant for Section 2.5.
 
-Statistically, the intercept $\nu_j$ is the expected value of $y_j$ when all latent variables equal zero,
+Statistically, the intercept $\nu_j$ is the expected value of $y_j$ when the latent variable equals zero,
 \[
 \nu_j = \mathbb{E}(y_j \mid \boldsymbol{\eta} = \mathbf{0}),
 \]
@@ -222,7 +221,6 @@ As shown by @hernan_robins_2020, suppose an investigator wishes to estimate the 
 \usetikzlibrary{fit, positioning, arrows.meta, shapes}
 \begin{figure}[!htbp]
 \centering
-% Create a 3x2 grid layout with more vertical space
 \begin{tabular}{@{}c@{\hspace{2cm}}c@{}}
 % Row 1
 \begin{minipage}[t][4.5cm][t]{0.4\textwidth}
@@ -348,7 +346,7 @@ As shown by @hernan_robins_2020, suppose an investigator wishes to estimate the 
 }
 \end{minipage}
 \\[5cm]
-% Row 3 - NEW PANELS
+% Row 3
 \begin{minipage}[t][4.5cm][t]{0.4\textwidth}
 \centering
 \textbf{E. Differential Measurement Error}\\[0.5em]
@@ -393,7 +391,6 @@ As shown by @hernan_robins_2020, suppose an investigator wishes to estimate the 
   measurementbox/.style={draw, dashed, rounded corners, inner sep=5pt},
   ]
   
-  % --- keep original eta and measurement exactly ---
   \node[latent] (eta) at (0, 0) {$\eta$};
   
   \node[manifest] (Y1) at (-2, -2) {$Y_1$};
@@ -414,13 +411,11 @@ As shown by @hernan_robins_2020, suppose an investigator wishes to estimate the 
   
   \node[measurementbox, fit=(Y1) (Y2) (Y3)] (box) {};
   
-  % --- add causal chain like Panel D (same spacing/length) ---
   \node[node] (X) at (-2, 0) {$X$};
   \node[node] (Z) at (2, 0) {$Z$};
   \draw[arrow] (X) -- (eta);
   \draw[arrow] (eta) -- (Z);
 
-  % --- move S down to same height as indicators ---
   \node[selection] (S) at (4, -2) {$S$};
   \draw[selectionarrow] (S) -- (box);
 
@@ -441,29 +436,27 @@ Panels E and F further extend this logic by incorporating group or contextual va
 
 ## What Does MI Have to Do With This?
 
-The previous paragraph briefly introduced this connection; here a more detailed treatment is provided. Hernán and Robins (2020) define *nondifferential measurement error* as error whose distribution does not depend on other variables in the model (see Technical Point 9.1, p. 122). For an indicator of $\eta$, nondifferentiality implies that $f(\varepsilon_1 \mid Z) = f(\varepsilon_1)$; in multi-group settings, it requires that $f(\varepsilon_1 \mid S) = f(\varepsilon_1)$, where $S$ denotes group membership. If measurement parameters (i.e., factor loadings, intercepts, or residual variances) differ across groups, this assumption fails, producing *differential measurement error*—that is, a violation of MI in psychometric terms. Because $\eta$ is unobserved, it is impossible to test $f(\varepsilon_1 \mid S) = f(\varepsilon_1)$ directly. Instead, MI testing provides an indirect empirical strategy for evaluating whether measurement error depends on group membership. In this sense, MI testing can be understood as a statistical operationalization of the causal assumption that group membership does not directly influence how observed indicators respond to the latent construct^[Formally, MI is a conditional independence assumption [@sterner_etall_2024]: for an observed indicator $Y$, latent variable $C$, and grouping or selection variable $V$, $f(Y \mid V, C) = f(Y \mid C)$, equivalently $Y \perp V \mid C$. In DAG terms, this means that the latent variable $C$ blocks all causal paths from $V$ to $Y$; that is, there are no direct effects of $V$ on the measurement process once the latent trait is fixed. In standard factor models, this corresponds to equality of loadings, intercepts, and residual variances across groups.].
+The previous paragraph briefly introduced this connection; here a more detailed treatment is provided. Hernán and Robins (2020) define *non-differential measurement error* as error whose distribution does not depend on other variables in the model (see Technical Point 9.1, p. 122). For an indicator of $\eta$, non-differentiability implies that $f(\varepsilon_1 \mid Z) = f(\varepsilon_1)$; in multi-group settings, it requires that $f(\varepsilon_1 \mid S) = f(\varepsilon_1)$, where $S$ denotes group membership. If measurement parameters (i.e., factor loadings, intercepts, or residual variances) differ across groups, this assumption does not hold, which entails *differential measurement error*. From a psychometric perspective, that is the violation of MI. Because $\eta$ is unobserved, it is impossible to test $f(\varepsilon_1 \mid S) = f(\varepsilon_1)$ directly. Instead, MI testing provides an indirect empirical strategy for evaluating whether measurement error depends on group membership. Hence, MI testing may be seen as a statistical operationalization of the causal assumption that group membership does not directly influence how observed indicators respond to the latent construct^[Formally, MI is a conditional independence assumption [@sterner_etall_2024]: for an observed indicator $Y$, latent variable $C$, and grouping or selection variable $V$, $f(Y \mid V, C) = f(Y \mid C)$, equivalently $Y \perp V \mid C$. In DAG terms, this means that the latent variable $C$ blocks all causal paths from $V$ to $Y$. This means there are no direct effects of $V$ on the measurement process once the latent trait is fixed. In standard factor models, this corresponds to equality of loadings, intercepts, and residual variances across groups.].
 
-MG-CFA is one such indirect method for assessing nondifferential measurement error, though others exist [@sterner_etall_2024b]. In MG-CFA, measurement invariance is evaluated through a sequence of nested models that impose increasingly restrictive equality constraints across groups. Typically, this sequence proceeds from *configural invariance* (i.e., the same factor structure across groups), to *metric* or *weak invariance* (i.e., equal factor loadings), *scalar* or *strong invariance* (i.e., equal intercepts), and finally *residual* or *strict invariance* (i.e., equal error variances). In the traditional frequentist approach, these constraints are specified as exact equalities (e.g., $\lambda_{g1} = \lambda_{g2}$, $\tau_{g1} = \tau_{g2}$, $\theta_{g1} = \theta_{g2}$), whereas Bayesian approaches can relax this requirement by allowing approximate equivalence through near-zero priors [@leitgob_etall_2023]. Violations at any level of this hierarchy imply differential measurement error. Metric and scalar non-invariance indicate that the measurement function itself differs by group, while residual non-invariance indicates that the error distribution varies across groups. All such violations contradict the causal requirement that $f(Y_1 \mid \eta, S) = f(Y_1 \mid \eta)$, that is, that group membership has no direct effect on item responses after conditioning on the latent construct [@millsap_olivera-aguilar_2012]. Each step in the MG-CFA sequence therefore constitutes a progressively stronger test of whether the measurement process is independent of group membership. In practice, however, full invariance at every level is often unrealistic, leading researchers to adopt *partial invariance* models in which only a subset of parameters is constrained to equality [@millsap_olivera-aguilar_2012; @leitgob_etall_2023].
+MG-CFA is such indirect method for assessing non-differential measurement error, though others exist [@sterner_etall_2024b]. In this case, MI is evaluated through a sequence of nested models that impose increasingly restrictive constraints across groups. Typically, MG-CFA proceeds from *configural invariance* (i.e., the same factor structure across groups), to *metric* or *weak invariance* (i.e., equal factor loadings), *scalar* or *strong invariance* (i.e., equal intercepts), and last *residual* or *strict invariance* (i.e., equal error variances). Note that in the frequentist approach the constraints are specified as exact equalities (e.g., $\lambda_{g1} = \lambda_{g2}$, $\theta_{g1} = \theta_{g2}$), but in Bayesian approaches approximate equivalence through near-zero priors is allowed [@leitgob_etall_2023]. Thus, violations at any level of this hierarchy imply differential measurement error. Metric and scalar non-invariance indicate that the measurement function itself differs by group, while residual non-invariance indicates that the error distribution varies across groups. All such violations contradict the causal requirement that $f(Y_1 \mid \eta, S) = f(Y_1 \mid \eta)$, meaning that group membership has no direct effect on item responses after conditioning on the latent construct [@millsap_olivera-aguilar_2012]. Each step in the MG-CFA sequence therefore constitutes a progressively stronger test of whether the measurement process is independent of group membership. In practice, however, full invariance at every level is often unrealistic, leading researchers to adopt *partial invariance* models in which only a subset of parameters is constrained to equality [@millsap_olivera-aguilar_2012; @leitgob_etall_2023].
 
-Importantly, MG-CFA can be viewed as a restricted special case of MNLFA, a more general framework in which measurement parameters are permitted to vary as functions of covariates. Whereas MG-CFA operationalizes nondifferentiality by imposing equality constraints across discrete groups, MNLFA evaluates the same assumption by directly estimating moderation effects on factor loadings, intercepts, residual variances, and latent factor moments. Although frequentist implementations of MNLFA often employ nested model comparisons as a pragmatic “divide-and-conquer” strategy [@bauer_2017], such comparisons are not intrinsic to the MNLFA framework. In fact, the recently proposed Bayesian MNLFA approaches extend this logic by integrating tests of invariance directly into the estimation process via posterior inference on moderation effects [@enders_etall_2024]. Important to this thesis, by treating latent variables as missing data within a factored-regression framework estimated via Markov chain Monte Carlo, the Bayesian MNLFA accommodates latent or incomplete moderators and avoids the distributional complications that arise in likelihood-based nested model comparisons [@enders_etall_2024] (see Appendix 2).
+Importantly, MG-CFA can be viewed as a restricted special case of MNLFA, which is a more general framework in which measurement parameters are allowed to vary as functions of covariates. As mentioned, MG-CFA operationalizes non-differentiability by imposing equality constraints across discrete groups. MNLFA instead evaluates the same assumption by directly estimating moderation effects on factor loadings, intercepts, residual variances, and latent factor moments. However, it is more flexible when it comes to the types of covariates (e.g., continuous) and pathways to be estimated. Moreover, frequentist implementations of MNLFA often employ nested model comparisons as a pragmatic “divide-and-conquer” strategy [@bauer_2017], but such comparisons are not intrinsic to the MNLFA framework. In fact, the recently proposed Bayesian MNLFA approaches extend this logic by integrating tests of invariance directly into the estimation process via posterior inference on moderation effects [@enders_etall_2024]. Relevant to this thesis, by treating latent variables as missing data within a factored-regression framework estimated via Markov chain Monte Carlo, the Bayesian MNLFA accommodates latent or incomplete moderators and avoids the distributional complications that arise in likelihood-based nested model comparisons [@enders_etall_2024] (see Appendix 2).
 
-The next section turns from these statistical procedures to their causal interpretation, clarifying what MI claims about the stability of the measurement process across groups or contexts.
+In the next section, we turn from the statistical procedures to their causal interpretation, clarifying what MI claims about the stability of the measurement process across groups or contexts.
 
 ## A Causal Perspective on MI
 
-As highlighted, MG-CFA imposes equality constraints on loadings, intercepts, and residuals across groups, but these constraints are only empirical indicators of a deeper causal claim: that the measurement mechanisms linking $\eta$ to its indicators are stable across groups or contexts. As @rohrer_paulewicz_2025 emphasize, statistical equality and causal invariance are not identical. Equality of parameters can arise even when mechanisms differ, and apparent non-invariance may result from model misspecification or sampling error. Thus, MI testing does not define invariance but probes the causal hypothesis that the structure of measurement is invariant across $S$.  
+As we noted, the constraints imposed by MG-CFA are only empirical indicators of a deeper causal claim: the measurement mechanisms linking $\eta$ to its indicators are stable across groups or contexts. This distinction matters because, as @rohrer_paulewicz_2025 emphasize, statistical equality and causal invariance are not identical. In fact, equality of parameters can arise even when mechanisms differ, and apparent non-invariance may result from model misspecification or sampling error. Thus, MI testing does not define invariance but rather probes the causal hypothesis that the measurement structure is invariant across $S$.  
 
-A useful way to understand this causal hypothesis is to consider what each level of MI rules out. Configural invariance would be violated if an item measures the construct in one group but not in another. Metric invariance would be violated if, given the same value of $\eta$, a one-unit increase in the construct produces a larger or smaller change in item responses in one group than another. Scalar invariance would be violated if, for the same value of $\eta$ (e.g., zero), people in one group systematically give higher or lower responses to an item than people in another group. Residual invariance would be violated if the amount of item-specific noise differs across groups—that is, if, after conditioning on $\eta$, responses vary more in one group than another. These interpretations correspond directly to different kinds of causal influence of $S$ on the items.  
+A useful way to understand this causal hypothesis is to consider what each level of MI rules out. Configural invariance would be violated if an item measures the construct in one group but not in another. Metric invariance would be violated if, given the same value of $\eta$, a one-unit increase in the construct produces a larger or smaller change in item responses in one group than another. Scalar invariance would be violated if, for the same value of $\eta$ (e.g., zero), people in one group systematically give higher or lower responses to an item than people in another group. Residual invariance would be violated if the amount of item-specific noise differs across groups (i.e., if after conditioning on $\eta$, responses vary more in one group than another). These interpretations correspond directly to different kinds of causal influence of $S$ on the items. From this causal perspective, MI can be expressed as a mediation claim, as highlighted before. This entails that all effects of $S$ on the indicators $\{Y_j\}$ are transmitted through the latent construct $\eta$. In DAG terms, this means that any influence of $S$ on the items that does not operate through $\eta$ corresponds to a violation of one of the invariance conditions above. Thus, each type of non-invariance reflects a distinct causal route by which the assumption of non-differential measurement error can fail.  
 
-From this causal perspective, MI can be expressed as a mediation claim, as highlighted before: all effects of $S$ on the indicators $\{Y_j\}$ are transmitted through the latent construct $\eta$. In DAG terms, this means that any influence of $S$ on the items that does not operate through $\eta$ corresponds to a violation of one of the invariance conditions above. Thus, each type of non-invariance reflects a distinct causal route by which the assumption of nondifferential measurement error can fail.  
-
-@rohrer_paulewicz_2025 further caution that these statistical tests rely on strong assumptions about the factor model itself: that a single latent construct captures the relevant shared variance, that the structural equations are correctly specified, and that all relevant causes of the items are included. When these assumptions fail, non-invariance may simply reflect model misspecification rather than genuine causal differences between groups. Conversely, passing MI tests does not guarantee equivalence of measurement mechanisms. Researchers should therefore make these assumptions explicit when interpreting MI results causally.  Crucially, the authors argue that MI violations should not be treated as analytical dead ends but as starting points for causal explanation (similar to Sterner, Pargent, et al., 2024). Patterns of violation can reveal how group membership affects the measurement process: through direct item effects (scalar), moderation of loadings (metric), or heterogeneity in residual variance (residual). From this viewpoint, violation of MI is not a property to be corrected but an empirical clue about the causal structure underlying measurement. 
+@rohrer_paulewicz_2025 further caution that these statistical tests rely on strong assumptions about the factor model itself. For instance, that a single latent construct captures the relevant shared variance, the structural equations are correctly specified, and all relevant causes of the items are included. When these assumptions fail, non-invariance may simply reflect model misspecification rather than real causal differences between groups. On the other hand, passing MI tests does not guarantee equivalence of measurement mechanisms. The authors also argue that MI violations should not be treated as analytical dead ends but as starting points for causal explanation (similar to Sterner, Pargent, et al., 2024). Therefore, the violation patterns may reveal how group membership affects the measurement process: through direct item effects (scalar), moderation of loadings (metric), or heterogeneity in residual variance (residual). From this viewpoint, violation of MI is not a property to be corrected but an empirical clue about the causal structure underlying measurement. 
 
 The selection node framework introduced by @deffner_etall_2022 and applied by @sterner_etall_2024 makes these issues explicit in graphical form. Adding a selection node $S$ that points to the measurement portion of the model (Panels E–F) encodes potential group or contextual influences on measurement, helping distinguish true differences in the latent construct from group-specific measurement artifacts. It also clarifies which level of MI is implicated, since different $S \rightarrow Y_j$ paths correspond to different types of invariance violations. Thus, incorporating selection nodes into DAGs allows researchers to move from assuming MI to explicitly modeling and testing for it, in such a way that we state clearly the assumptions under consideration (e.g., direct or indirect effect) that may affect MI. This approach aligns the logic of MI testing with causal reasoning: MI represents a specific set of conditional independencies, and violations correspond to direct causal influences of $S$ on items. 
 
 ## Sterner, Pargent, et al. (2024) and Extensions
 
-Sterner, Pargent, et al. (2024) use a DAG (Figure 2.2, Panel A) to illustrate that standard MG-CFA cannot distinguish between *direct* group-level violations of MI and violations that are fully mediated by a covariate. In their simulation—assuming *configural invariance* holds—the selection variable $S$ shifts the distribution of an observed covariate (age), which causally affects the measurement model. Specifically, age moderates the factor loadings of indicators $Y_{1\text{–}5}$ on the latent factor $IB$, while $S$ has no direct effect on the indicators. As mentioned before, testing MI across groups defined by $S$ using MG-CFA correctly leads to rejection of *metric invariance*. Although measurement parameters do differ across levels of $S$, these differences are entirely mediated by age rather than reflecting a direct dependence of the measurement model on the grouping variable itself. To address this issue, the authors propose MNLFA, which incorporates age directly into the measurement model and allows item parameters to vary as functions of the covariate. From this perspective, MI should be evaluated conditional on the causes of the indicators. Otherwise, indirect, covariate-mediated differences in measurement parameters are represented as group-level non-invariance, limiting insight into the underlying data-generating process.
+Sterner, Pargent, et al. (2024) use a DAG (Figure 2.2, Panel A) to illustrate that MG-CFA cannot distinguish between *direct* group-level violations of MI and violations that are fully mediated by a covariate. In their simulation—assuming configural invariance holds—the selection variable $S$ shifts the distribution of an observed covariate (age), which causally affects the measurement model. Specifically, age moderates the factor loadings of indicators $Y_{1\text{–}5}$ on the latent factor $IB$, while $S$ has no direct effect on the indicators. As mentioned before, testing MI across groups defined by $S$ using MG-CFA correctly leads to rejection of metric invariance. Although measurement parameters do differ across levels of $S$, these differences are entirely mediated by age rather than reflecting a direct dependence of the measurement model on the grouping variable itself. To account for this, the authors propose MNLFA, which makes it possible to incorporate age directly into the measurement model and allows item parameters to vary as functions of the covariate. From this perspective, MI should be evaluated conditional on the causes of the indicators. Otherwise, indirect, covariate-mediated differences in measurement parameters are represented as group-level non-invariance, limiting insight into the underlying data-generating process.
 
 ```{=latex}
 \begin{figure}[!htbp]
@@ -586,7 +579,7 @@ Sterner, Pargent, et al. (2024) use a DAG (Figure 2.2, Panel A) to illustrate th
 
 Therefore, although testing for MI is still uncommon in applied research (Maassen et al., 2023, as cited in Sterner, Pargent, et al., 2024), when it is conducted, researchers typically treat it as a procedural checkpoint rather than an integral part of the modeling process. In practice, researchers using MG-CFA implicitly assume that the grouping variable — or, in DAG terms, the selection node $S$ — directly influences the measurement model, meaning that parameters may differ across groups. This assumption is rarely acknowledged, yet it is built into the way MI is tested. One could argue that this is not necessarily problematic, since in many cases researchers simply wish to know whether cross-group comparisons are valid. Yet, in light of Sterner, Pargent, et al. (2024), it becomes clear that this practice also involves an implicit causal assumption and consequences of ignoring such are not fully captured. DAGs make that assumption visible and, more importantly, allow researchers to probe whether apparent non-invariance reflects a direct group effect or arises indirectly through covariates.
 
-Building on this idea, the present thesis extends their framework to situations where the source of non-invariance is latent rather than observed (Figure 2, Panel B). This extension is crucial because many sources of measurement non-invariance in psychology are, at the time of the measurement, unobserved. For the simulation study, to maintain comparability with @sterner_etall_2024, we manipulate only *metric (loading) non-invariance*. This extension is closely related to the psychometric concept of *differential item functioning* (DIF) (Holland & Wainer, 2012; Zumbo, 2007, as cited in Sterner, Pargent, et al., 2024). In the framework of Figure 2, Panel B, allowing certain loadings to vary across $\eta_x$ corresponds to it pointing into only some, but not all, measurement indicators. This captures the idea that specific items function differently depending on a group or covariate, while the remainder of the measurement model may remain invariant. Thus, our manipulation of metric non-invariance can be understood as a controlled instance of DIF within the causal-DAG perspective introduced by Sterner, Pargent, et al. (2024). Note that from a causal-inference perspective, omitting an arrow pointing to all indicators (as in panel F from Figure 1) is the stronger assumption. However, it is important to highlight that the recently proposed Bayesian MNLFA [@enders_etall_2024] can accommodate a (latent or observed) covariate moderating other measurement parameters (e.g., intercept).  In fact, such moderation is essential: in practice, one tests for all indicators across all measurement parameters, not only loadings. This will become clearer in the real-world application.
+Building on this idea, the present thesis extends their framework to situations where the source of non-invariance is latent rather than observed (Figure 2, Panel B). This extension is crucial because many sources of measurement non-invariance in psychology are, at the time of the measurement, unobserved. For the simulation study, to maintain comparability with @sterner_etall_2024, we manipulate only *metric (loading) non-invariance*. This extension is closely related to the psychometric concept of differential item functioning (DIF) (Holland & Wainer, 2012; Zumbo, 2007, as cited in Sterner, Pargent, et al., 2024). In the framework of Figure 2.2, Panel B, allowing certain loadings to vary across $\eta_x$ corresponds to it pointing into only some, but not all, measurement indicators. This captures the idea that specific items function differently depending on a group or covariate, while the remainder of the measurement model may remain invariant. Thus, our manipulation of metric non-invariance can be understood as a controlled instance of DIF within the causal-DAG perspective introduced by Sterner, Pargent, et al. (2024). Note that from a causal-inference perspective, omitting an arrow pointing to all indicators (as in panel F from Figure 2.1) is the stronger assumption. However, it is important to highlight that the recently proposed Bayesian MNLFA [@enders_etall_2024] can accommodate a (latent or observed) covariate moderating other measurement parameters (e.g., intercept).  In fact, such moderation is essential as, in practice, we test for all indicators across all measurement parameters, not only loadings. This will become clearer in the real-world application.
 
 # Simulation Design
 
@@ -598,7 +591,7 @@ Using the data-generating model depicted in Panel B (Figure 2.2), this simulatio
 
 - **Model comparison**: Do standard model fit indices favor the model that reflects the true causal pathway $G \to \eta_x \to \lambda_k$?
 
-These goals correspond to two complementary perspectives. First, we assess whether the estimator can recover the true parameter values, focusing on bias in the loading-moderation parameters when comparing the correctly specified model (with $\eta_x$ moderation) to the misspecified model (with $G$ moderation) (see Parameter Recovery and Bias). Second, we examine the implications for applied researchers, who are typically more concerned with hypothesis testing and model fit than with exact parameter recovery. In other words, researchers want to know if MI holds or not. Accordingly, we evaluate whether metric invariance is rejected and how model comparison results behave under causal misspecification (see Hypothesis Testing and Model Fit, and Model Comparison). This section follows current recommendations for reproducible research [@morris_etall_2019; @peikert_brandmaier_2021; @siepe_etall_2024; @rodrigues_2024].
+These goals correspond to two complementary perspectives. We first assess whether the MNLFA estimator can recover the true parameter values. Here we focus solely on the bias in the loading-moderation parameters when comparing the correctly specified model (with $\eta_x$ moderation) to the misspecified model (with $G$ moderation) (see Parameter Recovery and Bias). Second, we examine the implications for applied researchers, who are typically more concerned with hypothesis testing and model fit than with exact parameter recovery. In other words, researchers want to know if MI holds or not. This directly addresses the central question from Section 1.1. Accordingly, we evaluate whether metric invariance is rejected and how model comparison results behave under causal misspecification (see Hypothesis Testing and Model Fit, and Model Comparison). We examine this under the varying sample sizes and numbers of non-invariant items described earlier. This section follows current recommendations for reproducible research [@morris_etall_2019; @peikert_brandmaier_2021; @siepe_etall_2024; @rodrigues_2024].
 
 ### Data Generation (Population Model)
 
@@ -638,7 +631,7 @@ With respect to outliers, there are different approaches to this manner in the l
 r_version <- sub("^R version ([0-9.]+).*", "\\1", R.version.string)
 ```
 
-### Reproducibility^[Importantly, simulation studies may be hindered by selective conditions (i.e., "cherry-picking") as well as by the lack of reproducibility (Morris et al., 2019; Siepe et al., 2024). With respect to the former, pre-registration and related alternatives have been proposed. This thesis was not pre-registered. However, while preregistration serves a valuable purpose in constraining researcher degrees of freedom in empirical studies, its application to simulation-based research arguably conflates fundamentally distinct epistemological approaches.] and Computational Details
+### Reproducibility^[Importantly, simulation studies may be hindered by selective conditions (i.e., "cherry-picking") as well as by the lack of reproducibility (Morris et al., 2019; Siepe et al., 2024). With respect to the former, pre-registration and related alternatives have been proposed. This thesis was not pre-registered.] and Computational Details
 
 This simulation was conducted on a Mac Studio with an Apple M4 Max chip (with 14 cores and 36 GB of RAM), running macOS Sequoia 15.5. The bayesian MNLFA analyses were conducted in R (version `r r_version`) [@r_core_team_2021] using the *rBlimp* package (version `r packageVersion("rblimp")`), an R extension to the Blimp software program [@keller_enders_2023]. Each design cell was replicated 100 times. A larger number of replications would yield greater Monte Carlo precision, but this choice was based on computational constraints. Following the recommendations of @enders_etall_2024, we used a burn-in of 30,000 cycles and retained 30,000 post–burn-in iterations per replication. In total, 2 chains were used.  All materials necessary to fully reproduce the results and this manuscript are available on following GitHub repository: https://github.com/felipelfv/Beyond_Numbers. 
 
@@ -674,13 +667,13 @@ get_next_seed <- function() {
 
 # DATA GENERATION FUNCTION
 gen_data <- function(N, dif_items) {
-  # Group indicator
+  # group indicator
   G <- rbinom(N, 1, 0.5)
   
-  # Target latent construct C
+  # target latent construct C
   C <- rnorm(N, mean = 0, sd = 1)
   
-  # TRUE CAUSAL MECHANISM: Group -> Age -> DIF on loadings
+  # TRUE CAUSAL MECHANISM: group -> age -> DIF on loadings
   A1 <- rnorm(sum(G == 0), mean = 0,   sd = 1)
   A2 <- rnorm(sum(G == 1), mean = 0.5, sd = 1)
   Age <- numeric(N)
@@ -747,7 +740,7 @@ item.model:
   y5 ~ 1 Group lat Group*lat@b_gint_y5;
 "
 
-# 1a) NULL group model: same, but no Group*lat interactions (no non-uniform DIF)
+# 1a) NULL group model: same, but no group*lat interactions (no non-uniform DIF)
 model_group_null <- "
 latent.model:
   lat ~ 1 Group;
@@ -756,7 +749,7 @@ latent.model:
 item.model:
   y1 ~ 1@0 lat@1;
 
-  # no Group*lat terms: loadings invariant across Group
+  # no group*lat terms: loadings invariant across Group
   y2 ~ 1 Group lat;
   y3 ~ 1 Group lat;
   y4 ~ 1 Group lat;
@@ -767,7 +760,7 @@ item.model:
 # identification via marker x1 for latX and y1 for lat
 model_age <- "
 latent.model:
-  # age factor latX as a function of Group
+  # age factor latX as a function of group
   latX ~ 1 Group;
   var(latX) ~ 1;        # free variance of Age factor
 
@@ -776,14 +769,14 @@ latent.model:
   var(lat) ~ 1 latX;    # variance of lat possibly moderated by Age
 
 item.model:
-  # marker item for latX (Age): intercept = 0, loading = 1
+  # marker item for latX (age): intercept = 0, loading = 1
   x1 ~ 1@0 latX@1;
   x2 ~ 1   latX;
   x3 ~ 1   latX;
   x4 ~ 1   latX;
   x5 ~ 1   latX;
   
-  # marker item for lat: intercept = 0, loading = 1, no DIF wrt Age
+  # marker item for lat: intercept = 0, loading = 1, no DIF wrt age
   y1 ~ 1@0 lat@1 latX*lat@0;
 
   # y2–y5: allow main effect of latX + interaction latX*lat for DIF
@@ -972,7 +965,7 @@ for (N in Ns) {
         iter = iter
       )
       
-      cat(" done.\n")
+      cat(" done\n")
     }
     
     cat("completed condition:", condition_key, "\n")
@@ -986,19 +979,19 @@ for (N in Ns) {
 
 ## Absolute Bias
 
-In case of 2 DIF items, the correctly specified $\eta_x$ model yielded unbiased estimates for DIF parameters. In contrast, the misspecified $G$ model that ignores the causal pathway produced substantial negative bias for items with true DIF effects. For items without DIF, the $G$ model yielded substantially less bias. Similar findings were obtained for the case with 4 DIF items, where the $\eta_x$ model also resulted in unbiased estimates and the $G$ model showed substantial negative bias. Figure 4.1 displays the average bias for each condition and item along organized by model, DIF case, and sample size.
+In case of 2 DIF items, the correctly specified $\eta_x$ model yielded unbiased estimates for DIF parameters. In contrast, the misspecified $G$ model that ignores the causal pathway produced substantial negative bias for items with true DIF effects. For items without DIF, the $G$ model yielded substantially less bias. Similar findings were obtained for the case with 4 DIF items, where the $\eta_x$ model also resulted in unbiased estimates and the $G$ model showed substantial negative bias. Figure 4.1 displays the average bias for each condition and item by model, DIF case, and sample size.
 
 ## Hypothesis Testing and Model Fit
 
-The $\eta_x$ model resulted in power approaching 100% for detecting the true DIF effects across all sample sizes, while maintaining nominal Type I error rates (1-6%) for the case with only 2 DIF items. On the other hand, the misspecified $G$ model yielded substantially low power through the sample sizes considered. Note, however, that the Type I error rates for the case with only 2 DIF items did not deviate substantially from the nominal rate. Figure 4.2 shows these item-level rejection rates by $N$, model, and DIF case. 
+The $\eta_x$ model resulted in power approaching 100% for detecting the true DIF effects across all sample sizes, while maintaining nominal Type I error rates (1-6%) for the case with only 2 DIF items. On the other hand, the misspecified $G$ model yielded substantially low power through the sample sizes considered. Note, however, that the Type I error rates for the case with only 2 DIF items did not deviate substantially from the nominal rate. Figure 4.2 shows these item-level rejection rates by $N$, model, and DIF case. This result highlights that without taking into account the causal pathway, detection rates for violation of metric invariance are low. Increasing the sample size shows an increase in the detection rate, but still under the desirable level. 
 
-This result highlights that without taking into account the causal pathway, detection rates for violation of metric invariance are low. Increasing the sample size shows an increase in the detection rate, but still under the desirable level. Figure 4.2 shows these item-level rejection rates by $N$, model, and DIF case. We also evaluated a joint Wald test within each model family that simultaneously tests whether all loading–interaction parameters equal zero. Figure 4.3 reports these joint rejection rates across $N$ and DIF cases.
+We also evaluated a joint Wald test within each model family that simultaneously tests whether all loading–interaction parameters equal zero. Figure 4.3 reports these joint rejection rates across $N$ and DIF cases.
 
 ## Model Comparison
 
-Despite the $\eta_x$ model being the correctly specified model, both WAIC and DIC consistently favored the simpler but misspecified $G$ model across all conditions. The preference for the misspecified model became more pronounced with increasing sample size (WAIC differences ranging from -2,300 at N=200 to -9,300 at N=800). This highlights a critical limitation of information criteria in detecting measurement non-invariance when a confounding causal pathway exists—the simpler model that ignores the true data-generating mechanism is systematically preferred. Figure 4.4 summarizes this model comparison results by $N$ and DIF case.
+Despite the $\eta_x$ model being the correctly specified model, both WAIC and DIC consistently favored the simpler but misspecified $G$ model across all conditions. The preference for the misspecified model became more pronounced with increasing sample size. This highlights a critical limitation of information criteria in detecting measurement non-invariance when a confounding causal pathway exists: the simpler model that ignores the true data-generating mechanism is systematically preferred. Figure 4.4 summarizes this model comparison results by $N$ and DIF case.
 
-Additionaly, comparing the full models with the null models (within family model) yielded constrating results. Figure 4.5 summarizes this model comparison results by $N$ and DIF case.
+Additionaly, comparing the full models with the null models (within family model) yielded contrasting results. Figure 4.5 summarizes this model comparison results by $N$ and DIF case.
 
 ```{r, echo=FALSE, fig.align="center", fig.show='hold', out.width="90%", fig.cap="Absolute bias for the loading moderation parameters."}
 knitr::include_graphics(c("plot1_dif_bias.pdf"))
@@ -1022,7 +1015,7 @@ knitr::include_graphics(c("plot5_full_vs_null.pdf"))
 
 # Real-world Application
 
-This example is deliberately simplified and intended as a conceptual illustration rather than a basis for substantive causal conclusions. The goal is to demonstrate what can go wrong when the causal mechanisms underlying violations of MI are ignored in terms of practical conclusions. Following the previous sections, in applied work, possible violations of MI are often treated as if they were directly caused by the grouping variable itself (e.g., country or region). Under this implicit assumption, group membership is taken to be the source of DIF, and analyses typically proceed without further interrogation of the causal structure that generated the violation. Here, we consider an alternative and equally plausible causal pathway. Rather than a direct effect on the measurement model, the grouping variable (e.g., region) affects an intermediate covariate (e.g., individualism; ID), which in turn induces violations of MI at the moral judgment construct (IB)^[Note that we adopt the strong and implausible assumption that this causal structure is correctly identified and that no confounders or alternative pathways are present. In practice, especially with observational data, such assumptions are rarely defensible. Nevertheless, this simplified setting serves to highlight the broader point: violations of MI are not purely statistical artifacts but outcomes of underlying causal processes. Ignoring these processes or misattributing them directly to group membership can lead to misleading substantive interpretations and inappropriate modeling decisions.]. Therefore, treating the group variable as the direct cause obscures the actual data-generating process.
+This example is deliberately simplified and intended as a conceptual illustration rather than a basis for substantive causal conclusions. The goal is to demonstrate what can go wrong when the causal mechanisms underlying violations of MI are ignored in terms of practical conclusions^[We adopt the strong and implausible assumption that the causal structure is correctly identified and that no confounders or alternative pathways are present. In practice, especially with observational data, such assumptions are rarely defensible. Nevertheless, this simplified setting serves to highlight the broader point: violations of MI are not purely statistical artifacts but outcomes of underlying causal processes. Ignoring these processes or misattributing them directly to group membership can lead to misleading substantive interpretations and inappropriate modeling decisions.]. Following the previous sections, in applied work, possible violations of MI are often treated as if they were directly caused by the grouping variable itself (e.g., country or region). Under this implicit assumption, group membership is taken to be the source of DIF, and analyses typically proceed without further interrogation of the causal structure that generated the violation. Here, we consider an alternative and equally plausible causal pathway. Rather than a direct effect on the measurement model, the grouping variable (e.g., region) affects an intermediate covariate (e.g., individualism; ID), which in turn induces violations of MI at the moral judgment construct (IB) (Figure 5.1). Therefore, treating the group variable as the direct cause obscures the actual data-generating process.
 
 ```{=latex}
 \begin{figure}[!htbp]
@@ -1036,48 +1029,38 @@ This example is deliberately simplified and intended as a conceptual illustratio
     selectionarrow/.style={->, >=stealth, thick, dashed},
 ]
 
-% Selection node (top right)
 \node[selection] (S) at (4, 1.5) {$S$};
 
-% ID (shifted further right)
 \node[latent] (ID) at (4, 0) {ID};
 
-% IB (top center)
 \node[latent] (IB) at (0, 1.5) {IB};
 
-% Manifest indicators
 \node[manifest] (Y1) at (-2, -0.8) {$y_1$};
 \node[manifest] (Y2) at (-1, -0.8) {$y_2$};
 \node[manifest] (Y3) at (0, -0.8) {$y_3$};
 \node[manifest] (Y4) at (1, -0.8) {$y_4$};
 \node[manifest] (Y5) at (2, -0.8) {$y_5$};
 
-% Error terms
 \node[latent, scale=0.6] (E1) at (-2, -2) {$\varepsilon_1$};
 \node[latent, scale=0.6] (E2) at (-1, -2) {$\varepsilon_2$};
 \node[latent, scale=0.6] (E3) at (0, -2) {$\varepsilon_3$};
 \node[latent, scale=0.6] (E4) at (1, -2) {$\varepsilon_4$};
 \node[latent, scale=0.6] (E5) at (2, -2) {$\varepsilon_5$};
 
-% Dotted box around indicators
 \node[draw=black, dotted, thick, rounded corners, 
       fit=(Y1)(Y2)(Y3)(Y4)(Y5), 
       inner sep=8pt] (indicatorbox) {};
 
-% Selection arrow from S to ID
 \draw[selectionarrow] (S) -- (ID);
 
-% Arrows from IB to all indicators
 \draw[arrow] (IB) -- (Y1);
 \draw[arrow] (IB) -- (Y2);
 \draw[arrow] (IB) -- (Y3);
 \draw[arrow] (IB) -- (Y4);
 \draw[arrow] (IB) -- (Y5);
 
-% Dotted arrow from ID to the box (straight down-left)
 \draw[arrow, dotted] (ID) -- (indicatorbox.east);
 
-% Error arrows
 \draw[arrow] (E1) -- (Y1);
 \draw[arrow] (E2) -- (Y2);
 \draw[arrow] (E3) -- (Y3);
@@ -1140,7 +1123,7 @@ dat <- data %>%
   drop_na()
 ```
 
-To follow closely the simulated example as well as Sterner, Pargent, et al. (2024)^[Importantly, Sterner, Pargent, et al. (2024) considered only observations from group western whose age was above 30 years to achieve balanced groups in terms of sample size yet with different mean ages. The authors correctly note that this "changes" the data and conclusions must be conditional on such manipulation. Given that age is not relevant for the didactic illustration in this thesis, we did follow the same steps. Note, however, that the groups are substantially unbalanced. There is a lot of research of this topic. As this thesis is not concretely concerned with a substantive research perspective, we proceed with the example without further addressing such unequal sample size. The main objective is to show how conclusions may differed depending on the causal mechanism assumed and how to statistically model and estimate such.], we use the data provided by Bago et al. (2022). In other words, we selected only a few variables (out of the entire dataset) that are relevant to mimic exactly the simulation design scenario. For that, we included the variable *Region* (i.e., binary variable representing eastern and western countries). Moreover, we also collected the five items (in likert scale 1-7) associated with the latent construct *Impartial Beneficence* (IB) (part of the general moral judgment factor). These were measured through the Oxford Utilirianism Scale that in total contains nine items, but we only kept the ones associated with IB, as in Sterner, Pargent, et al. (2024). Similarly, we collected five items (in likert scale 1-9) presumably measuring *Individualism* (ID). These were measured through the Individualism–Collectivism Scale. Note that information considering what each item measured was not easily available. To follow a similar amount of items, we selected the first five items. Moreover, the data used for this thesis is the processed data as described in Bago et al. (2022), meaning that the exclusion criteria was already applied. Importantly, there are no missing values in this case. For more information, see Bago et al. (2022).
+To follow closely the simulated example as well as Sterner, Pargent, et al. (2024)^[Importantly, Sterner, Pargent, et al. (2024) considered only observations from group western whose age was above 30 years to achieve balanced groups in terms of sample size yet with different mean ages. The authors correctly note that this "changes" the data and conclusions must be conditional on such manipulation. Given that age is not relevant for the didactic illustration in this thesis, we did follow the same steps. Note, however, that the groups are substantially unbalanced. There is a lot of research of this topic. As this thesis is not concerned with a substantive research perspective, we proceed with the example without further addressing such unequal sample size.], we use the data provided by Bago et al. (2022). In other words, we selected only a few variables (out of the entire dataset) that are relevant to mimic exactly the simulation design scenario. For that, we included the variable *Region* (i.e., binary variable representing eastern and western countries). Moreover, we also collected the five items (in likert scale 1-7) associated with the latent construct *Impartial Beneficence* (IB) (part of the general moral judgment factor). These were measured through the Oxford Utilirianism Scale that in total contains nine items, but we only kept the ones associated with IB, as in Sterner, Pargent, et al. (2024). Similarly, we collected five items (in likert scale 1-9) presumably measuring *Individualism* (ID). These were measured through the Individualism–Collectivism Scale. Note that information considering what each item measured was not easily available. To follow a similar amount of items, we selected the first five items. Moreover, the data used for this thesis is the processed data as described in Bago et al. (2022), meaning that the exclusion criteria was already applied. Importantly, there are no missing values in this case. For more information, see Bago et al. (2022).
 
 ## Descriptive Analyses
 
@@ -1148,11 +1131,11 @@ We investigated some summary measures (e.g., mean, polychoric correlations) of t
 
 ## Analytic Strategy
 
-Following @enders_etall_2024, the analysis consists of three main steps^[Different from the simulation study where we controlled the data generation process. In this real-world application, one should test separately for each level of MI, which is what we do in step 2 and 3]. 
+Following @enders_etall_2024, the analysis consists of three main steps^[Different from the simulation study where we controlled the data generation process. In this real-world application, one should test separately for each level of MI, which is what we do in Steps 2 and 3]. 
 
-**Step 1: Dimensionality Assessment.** We first investigated whether the two hypothesized factor structures (IB and ID) adequately fit the data. This step ensures that subsequent steps are built on defensible measurement models.
+**Step 1: Dimensionality Assessment.** We first investigate whether the two hypothesized factor structures (IB and ID) adequately fit the data. This step ensures that subsequent steps are built on defensible measurement models.
 
-**Step 2: Modeling the Mean and Variance of the Latent Factor.** We then modeled the influence of the moderators on the conditional mean and variance of the latent factor. This step is critical because it identifies latent score variation that could otherwise be mistaken for DIF if left unmodeled [@enders_etall_2024; @bauer_2017].
+**Step 2: Modeling the Mean and Variance of the Latent Factor.** We then model the influence of the moderators on the conditional mean and variance of the latent factor. This step is critical because it identifies latent score variation that could otherwise be mistaken for DIF if left unmodeled [@enders_etall_2024; @bauer_2017].
 
 For the direct effect model, with $X_p = \text{region}_p$:
 
@@ -1189,7 +1172,7 @@ Substituting the first equation into the conditional mean yields the reduced for
 
 where $\alpha_1\gamma_1$ represents the indirect effect of region on IB through ID.
 
-**Step 3: Moderation of Factor Loadings and Measurement Intercepts.** Having accounted for structural effects, we examined whether the psychometric properties of the indicators (i.e., factor loadings and measurement intercepts) varied as a function of the moderators. Significant moderation at this step indicates violations of MI or DIF [@enders_etall_2024; @bauer_2017].
+**Step 3: Moderation of Factor Loadings and Measurement Intercepts.** After accounting for structural effects, we examine whether the measurement properties of the indicators (i.e., factor loadings and measurement intercepts) vary as a function of the moderators. Significant moderation at this step indicates violations of MI or DIF [@enders_etall_2024; @bauer_2017].
 
 For the direct effect model:
 
@@ -1209,7 +1192,7 @@ g_i(\mu_{ip}) = \upsilon_{0i} + \upsilon_{1i} \xi_p + \lambda_{0i} \eta_p + \lam
 
 ## Step 1: Dimensionality Assessment
 
-To examine the dimensionality of the measurement instruments and determine the appropriateness of such factor models, an Exploratory Graph Analysis (EGA) was conducted using the *EGAnet* package (version `r packageVersion("EGAnet")`) [@EGAnet]. In the resulting network, items are represented as nodes and edges represent the estimated partial correlations obtained via the graphical LASSO. The network layout places more strongly connected items closer together, revealing clear clusters that correspond to the expected latent variables. To evaluate the robustness of the dimensionality, a bootstrap EGA with 1000 iterations was performed. The bootstrap results indicated high dimensional stability, with the two-dimension solution consistently recovered across resamples, supporting the theoretical structure (see Figure 5.1). We also performed a CFA and assessed the fit indices to evaluate the factor models for individualism and IB using the *blavaan* package (version `r packageVersion("blavaan")`). The CFA favored the two factor model (see Table 5.1 for indices) [@merkle_rosseel_2018].
+To examine the dimensionality of the measurement instruments and determine the appropriateness of such factor models, an Exploratory Graph Analysis (EGA) was conducted using the *EGAnet* package (version `r packageVersion("EGAnet")`) [@EGAnet]. In the resulting network, items are represented as nodes and edges represent the estimated partial correlations obtained via graphical LASSO. The network layout places more strongly connected items closer together, revealing clusters that correspond to the expected latent variables. To evaluate the robustness of the dimensionality, a bootstrap EGA with 1000 iterations was performed. The bootstrap results indicated high dimensional stability, with the two-dimension solution consistently recovered across resamples, supporting the theoretical structure (see Figure 5.1). We also performed a CFA and assessed the fit indices to evaluate the factor models for individualism and IB using the *blavaan* package (version `r packageVersion("blavaan")`). The CFA favored the two factor model (see Table 5.1 for indices) [@merkle_rosseel_2018].
 
 ```{r ega, echo=FALSE, eval=FALSE}
 # the ^^[ character in your LaTeX error is the escape #character (U+001B) - part of ANSI color codes that leaked #into your document from R package output.
@@ -1310,22 +1293,22 @@ fit_summary %>%
 
 model_region <- "
 latent.model:
-  # Mean and variance of lat as functions of Region (both free)
+  # mean and variance of lat as functions of region (both free)
   lat ~ 1 Region;
   var(lat) ~ 1 Region;
 
 item.model:
-  # Marker item for lat: intercept fixed to 0, loading = 1, no DIF
+  # marker item for lat: intercept fixed to 0, loading = 1, no DIF
   y1 ~ 1@0 lat@1;
 
-  # Other items: free intercept, free loading, and possible Region DIF (slope)
+  # other items: free intercept, free loading, and possible region DIF (slope)
   y2 ~ 1 Region lat Region*lat@b_gint_y2;
   y3 ~ 1 Region lat Region*lat@b_gint_y3;
   y4 ~ 1 Region lat Region*lat@b_gint_y4;
   y5 ~ 1 Region lat Region*lat@b_gint_y5;
 "
 
-# Wald tests for Region × lat interactions on items y2–y5
+# wald tests for Region × lat interactions on items y2–y5
 wald_region <- list(
   "b_gint_y2 = 0",
   "b_gint_y3 = 0",
@@ -1369,17 +1352,17 @@ cat("\n--- MODEL FIT (Region model) ---\n")
 # region → individualism → lat
 model_individualism <- "
 latent.model:
-  # Individualism factor as a function of Region
+  # individualism factor as a function of region
   Individualism ~ 1 Region;
   var(Individualism) ~ 1;        # free variance, no moderation on variance
 
-  # Outcome factor lat as a function of Individualism
+  # outcome factor lat as a function of individualism
   lat  ~ 1 Individualism;
-  var(lat) ~ 1 Individualism;    # variance of lat possibly moderated by Individualism
+  var(lat) ~ 1 Individualism;    # variance of lat possibly moderated by individualism
 
 item.model:
   # x1–x5 are indicators of latent Individualism
-  # Marker item x1: intercept fixed to 0, loading = 1
+  # marker item x1: intercept fixed to 0, loading = 1
   x1 ~ 1@0 Individualism@1;
   x2 ~ 1   Individualism;
   x3 ~ 1   Individualism;
@@ -1388,10 +1371,10 @@ item.model:
   
   # y1–y5 are indicators of latent lat,
   # with possible moderation by Individualism (Individualism*lat)
-  # Marker item y1: intercept fixed to 0, loading = 1, no DIF
+  # marker item y1: intercept fixed to 0, loading = 1, no DIF
   y1 ~ 1@0 lat@1 Individualism*lat@0;
 
-  # y2–y5: allow main effect of Individualism + interaction Individualism*lat for DIF
+  # y2–y5: allow main effect of individualism + interaction individualism*lat for DIF
   y2 ~ 1 lat Individualism Individualism*lat@b_int_y2;
   y3 ~ 1 lat Individualism Individualism*lat@b_int_y3;
   y4 ~ 1 lat Individualism Individualism*lat@b_int_y4;
@@ -1437,22 +1420,22 @@ wald_results_individualism <- tryCatch(
 ## MODEL 1b: STANDARD MI TESTING (region-based) for individualism
 model_region_ind <- "
 latent.model:
-  # Mean and variance of Individualism as functions of Region (both free)
+  # mean and variance of individualism as functions of region (both free)
   Ind ~ 1 Region;
   var(Ind) ~ 1 Region;
 
 item.model:
-  # Marker item for Ind: intercept fixed to 0, loading = 1, no DIF
+  # marker item for Ind: intercept fixed to 0, loading = 1, no DIF
   x1 ~ 1@0 Ind@1;
 
-  # Other items: free intercept, free loading, and possible Region DIF (slope)
+  # other items: free intercept, free loading, and possible region DIF (slope)
   x2 ~ 1 Region Ind Region*Ind@b_gint_x2;
   x3 ~ 1 Region Ind Region*Ind@b_gint_x3;
   x4 ~ 1 Region Ind Region*Ind@b_gint_x4;
   x5 ~ 1 Region Ind Region*Ind@b_gint_x5;
 "
 
-# Wald tests for Region × Ind interactions on items x2–x5
+# wald tests for Region × Ind interactions on items x2–x5
 wald_region_ind <- list(
   "b_gint_x2 = 0",
   "b_gint_x3 = 0",
@@ -1485,7 +1468,7 @@ wald_results_region_ind <- tryCatch(
 (modelfit(fit_region_ind))
 ```
 
-We first modeled the influence of the moderator (in one case region, in the other ID) on the conditional mean and variance of our latent factor IB. This step is relevant because otherwise we could mistakenly identify DIF when in fact the moderators affect the mean or variance. As argued in @enders_etall_2024, it is important to include all variables and effects that are of interest in this analysis step (because MNLFA is fundamentally an imputation model for the latent factor scores; see Appendix 2). This means if we had more moderators of interest and specific effects (e.g., interaction among moderators) we could include them^[Note that in this case researchers would be confronted with two model building choices: start with the more complex model or with the most simple. @enders_etall_2024 favor the former.].
+We first modeled the influence of the moderator (in one case region, in the other ID) on the conditional mean and variance of our latent factor IB. As noted, this step is relevant because otherwise we could mistakenly identify DIF when in fact the moderators affect the mean or variance. As argued in @enders_etall_2024, it is important to include all variables and effects that are of interest in this analysis step (because MNLFA is fundamentally an imputation model for the latent factor scores; see Appendix 2). This means if we had more moderators of interest and specific effects (e.g., interaction among moderators) we could include them^[Note that in this case researchers would be confronted with two model building choices: start with the more complex model or with the most simple. @enders_etall_2024 favor the former.].
 
 ### Results
 
@@ -1495,7 +1478,7 @@ The latent variance of IB was also modeled as a function of region on the log-va
 
 In the indirect effect model, region was specified to predict latent ID, which in turn predicted the mean and variance of IB. The regression of latent ID on region yielded a coefficient of $\hat{\gamma}_1 = 0.24$ (95% CI $[0.18,\,0.29]$, $p<.001$), indicating that, holding the ID measurement model parameters fixed, the expected value of latent ID for western respondents is $0.24$ units higher than for eastern respondents.
 
-The conditional mean of IB was then regressed on latent ID. The corresponding coefficient was $\hat{\alpha}_1 = 0.01$ (95% CI $[-0.01,\,0.03]$, $p=.43$). This indicates that, holding the measurement model parameters for both factors fixed, a one-unit increase in latent ID is associated with an expected increase of $0.01$ units in the latent IB factor; however, this estimate is not statistically distinguishable from zero. The indirect effect of region on IB through ID is given by $\hat{\gamma}_1 \times \hat{\alpha}_1 = 0.24 \times 0.01 = 0.002$, which is negligible given the non-significant path from ID to IB.
+The conditional mean of IB was then regressed on latent ID. The corresponding coefficient was $\hat{\alpha}_1 = 0.01$ (95% CI $[-0.01,\,0.03]$, $p=.43$). This indicates that, holding the measurement model parameters for both factors fixed, a one-unit increase in latent ID is associated with an expected increase of $0.01$ units in the latent IB factor; however, this estimate is not statistically significant. The indirect effect of region on IB through ID is given by $\hat{\gamma}_1 \times \hat{\alpha}_1 = 0.24 \times 0.01 = 0.002$, which is negligible given the non-significant path from ID to IB.
 
 By contrast, latent ID significantly moderated the latent variance of IB. The ID coefficient in the log-variance regression was $\hat{\omega}_1 = 0.08$ (95% CI $[0.03,\,0.13]$, $p=.002$), translating to a multiplicative factor of $\exp(0.08)\approx 1.08$ on the variance scale. Thus, holding the measurement model parameters fixed, each one-unit increase in latent ID is associated with an approximate $8\%$ increase in the conditional variance of the IB factor.
 
@@ -1505,17 +1488,17 @@ Next, we evaluated moderation effects on item intercepts and factor loadings. We
 
 ### Results^[Note that for this illustration we used default priors to mimic the behavior of most researchers. We checked convergence similarly as in the simulation study, including posterior and trace plots. Moreover, we checked the imputed data summaries and correlations among residuals as @enders_etall_2024. No issues were detected.]
 
-In the direct effect model, only item $y_5$ exhibited a statistically distinguishable interaction. The posterior mean for the Region $\times$ IB interaction on $y_5$ was $\hat{\lambda}_{1,5} = -0.13$ (95% CI $[-0.25,\,-0.02]$, $p=.028$). This indicates that, holding the latent factor score and all other model parameters fixed, the factor loading for item $y_5$ for western respondents is $0.13$ units lower than for eastern respondents. Equivalently, the conditional effect of the latent IB factor on item $y_5$ depends on region: for eastern respondents, a one-unit increase in latent IB is associated with a $\hat{\lambda}_{0,5}$ unit increase in $y_5$, whereas for western respondents, this effect is $\hat{\lambda}_{0,5} - 0.13$ units. Thus, the item discriminates more strongly among eastern respondents than among western respondents.
+In the direct effect model, only item $y_5$ exhibited a statistically distinguishable interaction. The posterior mean for the region $\times$ IB interaction on $y_5$ was $\hat{\lambda}_{1,5} = -0.13$ (95% CI $[-0.25,\,-0.02]$, $p=.028$). This indicates that, holding the latent factor score and all other model parameters fixed, the factor loading for item $y_5$ for western respondents is $0.13$ units lower than for eastern respondents. Equivalently, the conditional effect of the latent IB factor on item $y_5$ depends on region: for eastern respondents, a one-unit increase in latent IB is associated with a $\hat{\lambda}_{0,5}$ unit increase in $y_5$, whereas for western respondents, this effect is $\hat{\lambda}_{0,5} - 0.13$ units. Thus, the item discriminates more strongly among eastern respondents than among western respondents.
 
-For items $y_2$, $y_3$, and $y_4$, the interaction terms had posterior means close to zero with 95% credible intervals including zero. For these items, holding the latent factor score and other model parameters fixed, the difference in factor loadings between western and eastern respondents is not statistically distinguishable from zero. However, the joint Wald test for the null hypothesis that all Region $\times$ IB interactions for $y_2$–$y_5$ are simultaneously zero was significant ($\chi^2(4)=20.57$, $p<.001$). This joint significance, driven primarily by item $y_5$, indicates that the measurement model is not fully invariant with respect to region.
+For items $y_2$, $y_3$, and $y_4$, the interaction terms had posterior means close to zero with 95% credible intervals including zero. For these items, holding the latent factor score and other model parameters fixed, the difference in factor loadings between western and eastern respondents is not statistically distinguishable from zero. However, the joint Wald test for the null hypothesis that all region $\times$ IB interactions for $y_2$–$y_5$ are simultaneously zero was significant ($\chi^2(4)=20.57$, $p<.001$). This joint significance, driven primarily by item $y_5$, indicates that the measurement model is not fully invariant with respect to region.
 
-In the indirect effect model, measurement moderation was assessed via the ID $\times$ IB interaction. For items $y_2$–$y_5$, the interaction coefficient $\hat{\lambda}_{1i}$ represents the expected change in the factor loading per one-unit increase in latent ID, holding the latent IB factor score and all other model parameters fixed. The estimated coefficients were small (posterior means ranging from $0.00$ to $0.03$) and their 95% credible intervals all contained zero. Thus, holding latent IB and other parameters fixed, a one-unit increase in latent ID is not associated with a statistically distinguishable change in item loadings. Because the interaction terms are not statistically significant, the conditional effect of latent IB on each item (i.e., the loading) is interpreted as constant across levels of latent ID.
+In the indirect effect model, measurement moderation was assessed via the ID $\times$ IB interaction. For items $y_2$–$y_5$, the interaction coefficient $\hat{\lambda}_{1i}$ represents the expected change in the factor loading per one-unit increase in latent ID, holding the latent IB factor score and all other model parameters fixed. The estimated coefficients were small (posterior means ranging from $0.00$ to $0.03$) and their 95% credible intervals all contained zero. Thus, holding latent IB and other parameters fixed, a one-unit increase in latent ID is not associated with a statistically significant change in item loadings. Because of that, the conditional effect of latent IB on each item (i.e., the loading) is interpreted as constant across levels of latent ID.
 
 Consistent with the individual parameter tests, the joint Wald test for the null hypothesis that all ID $\times$ IB interactions for $y_2$–$y_5$ are simultaneously zero was non-significant ($\chi^2(4)=2.79$, $p=.59$). Thus, conditional on the model structure, there is no statistical evidence that the factor loadings depend on the level of latent ID.
 
-## Conclusion^[Because the DAG-informed specification treats region as a causal antecedent of ID, we also examined whether the ID factor itself satisfies MI across regions. When estimating an MNLFA model with region as the moderator for the ID measurement model, we found clear structural differences: region significantly predicted both the latent mean ($\hat{\gamma}_1 = 0.30$, 95% CI $[0.23,\,0.37]$, $p<.001$) and the latent variance on the log scale ($\hat{\omega}_1 = -0.43$, 95% CI $[-0.53,\,-0.34]$, $p<.001$), indicating higher expected ID scores and approximately $35\%$ smaller latent variability among western respondents. Importantly, region also moderated several item–factor relations. All four non-marker items showed statistically distinguishable region $\times$ ID interactions (individual Wald tests: all $p<.04$), and the joint test over items $x_2$–$x_5$ was highly significant ($\chi^2(4)=96.54$, $p<.001$). Thus, the ID scale exhibits measurement non-invariance with respect to region, meaning that the relation between latent ID and its indicators differs for eastern versus western respondents. This finding has implications for interpreting the DAG-informed model: because ID is not measured equivalently across regions, any structural path involving ID may conflate true construct variation with measurement artifact. Consequently, the region $\rightarrow$ ID $\rightarrow$ IB pathway cannot be cleanly evaluated, and conclusions about whether ID mediates regional differences in IB should be drawn with caution.]
+## Conclusion^[Because the DAG-informed specification treats region as a causal antecedent of ID, we also examined whether the ID factor itself satisfies MI across regions. When estimating an MNLFA model with region as the moderator for the ID measurement model, we found clear structural differences: region significantly predicted both the latent mean ($\hat{\gamma}_1 = 0.30$, 95% CI $[0.23,\,0.37]$, $p<.001$) and the latent variance on the log scale ($\hat{\omega}_1 = -0.43$, 95% CI $[-0.53,\,-0.34]$, $p<.001$), indicating higher expected ID scores and approximately $35\%$ smaller latent variability among western respondents. Importantly, region also moderated several item–factor relations. All four non-marker items showed statistically distinguishable region $\times$ ID interactions (individual Wald tests: all $p<.04$), and the joint test over items $x_2$–$x_5$ was highly significant ($\chi^2(4)=96.54$, $p<.001$). Thus, the ID scale exhibits measurement non-invariance with respect to region, meaning that the relation between latent ID and its indicators differs for eastern versus western respondents.]
 
-From a MI perspective, the two models yield contrasting conclusions about the source of measurement non-invariance in the IB scale. The direct effect model provides evidence that the IB measurement system is not fully invariant across regions. Although most region $\times$ IB interaction effects were close to zero, item $y_5$ showed a statistically distinguishable moderation effect, and the joint Wald test rejected the null hypothesis that all loadings are equal across regions. Thus, at least one factor loading differs between eastern and western respondents, implying partial metric non-invariance in the measurement of IB with respect to region. In contrast, the indirect effect model showed no evidence of measurement moderation by latent ID. The ID $\times$ IB interaction coefficients were uniformly small and non-significant, indicating that the factor loadings of the IB indicators do not vary as a function of respondents' standing on latent ID. However, this finding must be interpreted in light of the footnoted result: because the ID scale itself exhibits substantial measurement non-invariance with respect to region, the latent ID scores used as moderators in the DAG-informed model may not represent the same construct across regional groups. This compromises the interpretability of the null finding for ID $\times$ IB interactions.
+From a MI perspective, the two models yield contrasting conclusions about the source of measurement non-invariance in the IB scale. The direct effect model provides evidence that the IB measurement system is not fully invariant across regions. Although most region $\times$ IB interaction effects were close to zero, item $y_5$ showed a statistically significant moderation effect, and the joint Wald test rejected the null hypothesis that all loadings are equal across regions. Thus, at least one factor loading differs between eastern and western respondents, implying partial metric non-invariance in the measurement of IB with respect to region. In contrast, the indirect effect model showed no evidence of measurement moderation by latent ID. The ID $\times$ IB interaction coefficients were uniformly small and non-significant, indicating that the factor loadings of the IB indicators do not vary as a function of respondents' standing on latent ID. However, this finding must be interpreted in light of the footnoted result: because the ID scale itself exhibits substantial measurement non-invariance with respect to region, the latent ID scores used as moderators in the DAG-informed model may not represent the same construct across regional groups. This compromises the interpretability of the null finding for ID $\times$ IB interactions.
 
 # Discussion
 
@@ -1525,7 +1508,7 @@ The results highlight the importance of taking into account the assumed causal m
 
 ## Limitations
 
-Simulation results are conditional on the specific variables manipulated, and extrapolating beyond these conditions is therefore not ideal. The causal mechanism assumed throughout this thesis is also highly implausible. Although one could extend the data-generating process to include additional pathways such as confounders [@sterner_etall_2025], such extensions are tractable (theoretically and computationally) for observed covariates. For latent variables, it is not even conceptually clear what an “intervention” means as latent variables cannot be directly manipulated, and psychological interventions tend to be “fat-handed,” altering several constructs at once [@eronen_2020]. Moreover, from the estimation side, a more complex model would probably lead to more convergence issues. Also, with respect to more complex models, although researchers often work with multiple variables and may wish to perform variable selection, this would introduce well-known challenges associated with selection and standard statistical inference, which are also relevant in the context of causal inference [@berk_etall_2013]. Last, we did not investigate departures from the assumptions underlying the MNLFA parametrization and estimation, which is another crucial aspect when interpreting (causally) the estimates.
+Simulation results are conditional on the specific variables manipulated, and extrapolating beyond these conditions is therefore not ideal. The causal mechanism assumed throughout this thesis is also highly implausible. Although one could extend the data-generating process to include additional pathways such as confounders [@sterner_etall_2025], such extensions are tractable (theoretically and computationally) for observed covariates. For latent variables, it is not even conceptually clear what an “intervention” means as latent variables cannot be directly manipulated, and psychological interventions tend to be “fat-handed,” altering several constructs at once [@eronen_2020]. In fact, more formal work is needed for the causal identification of latent variables (Sterner et al., 2025) in general. Moreover, from the estimation side, a more complex model would probably lead to more convergence issues. On top of that, when researchers work with multiple variables (as mentioned in Step 2 in Chapter 5), they may perform variable selection approaches, but this would introduce well-known challenges associated with selection and standard statistical inference [@berk_etall_2013]. Last, we did not investigate departures from the assumptions underlying the MNLFA parametrization and estimation, which is another crucial aspect when interpreting (causally) the estimates.
 
 \newpage{}
 
@@ -1825,7 +1808,7 @@ f(\mathbf{x}_i\mid\boldsymbol{\phi})
 \prod_{j=1}^p f(y_{ij}\mid\eta_i,\mathbf{x}_i,\boldsymbol{\phi})
 f(\eta_i\mid\mathbf{x}_i,\boldsymbol{\phi}),
 \]
-which generally has no closed form because $\mathbf{x}_i$ enters both the mean and variance functions. These full conditionals are updated with Metropolis–Hastings or related proposals within the Gibbs sampler.
+which generally has no closed form because $\mathbf{x}_i$ enters both the mean and variance functions. These full conditionals are updated with Metropolis–Hastings or related proposals within the Gibbs sampler. This is the case for the model we work with in this thesis.
 
 \newpage{}
 
